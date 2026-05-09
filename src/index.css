@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* ── Theme: Lilac (her) ── */
+:root,
+[data-theme="lilac"] {
+  --color-primary: #B8A9C9;
+  --color-primary-dark: #9A89B4;
+  --color-primary-light: #D6CCE3;
+  --color-bg: #FAF8FC;
+  --color-surface: #FFFFFF;
+  --color-text: #3D3250;
+  --color-text-muted: #8A7FA0;
+  --color-accent: #E8D5F5;
+  --color-border: #E8E2F0;
+}
+
+/* ── Theme: Charcoal-blue (his) ── */
+[data-theme="charcoal"] {
+  --color-primary: #2C3E5A;
+  --color-primary-dark: #1E2D45;
+  --color-primary-light: #4A6181;
+  --color-bg: #F4F6F8;
+  --color-surface: #FFFFFF;
+  --color-text: #1A2332;
+  --color-text-muted: #6B7B8F;
+  --color-accent: #DAE3ED;
+  --color-border: #D4DCE5;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100dvh;
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Utility classes that use theme vars */
+@utility bg-primary {
+  background-color: var(--color-primary);
+}
+@utility bg-primary-dark {
+  background-color: var(--color-primary-dark);
+}
+@utility bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+@utility bg-surface {
+  background-color: var(--color-surface);
+}
+@utility bg-page {
+  background-color: var(--color-bg);
+}
+@utility bg-accent {
+  background-color: var(--color-accent);
+}
+@utility text-primary {
+  color: var(--color-primary);
+}
+@utility text-primary-dark {
+  color: var(--color-primary-dark);
+}
+@utility text-heading {
+  color: var(--color-text);
+}
+@utility text-muted {
+  color: var(--color-text-muted);
+}
+@utility border-theme {
+  border-color: var(--color-border);
+}
+@utility ring-primary {
+  --tw-ring-color: var(--color-primary);
+}
+
+/* Progress bar fill */
+@utility bg-progress {
+  background-color: var(--color-primary);
+}
+@utility bg-progress-track {
+  background-color: var(--color-accent);
+}
