@@ -125,3 +125,19 @@ Edit `src/data/challenges.js`. Each challenge needs:
 - `difficulty` — emoji + label
 - `ingredients` — array of `{ name, amount }`
 - `steps` — array of `{ instruction, timer }` (timer in seconds, or null)
+
+## Next Steps
+
+**Quick wins:**
+- Add more hardcoded recipes to `challenges.js` (3-4 to start)
+- Auto-rotate challenges weekly based on current week number
+
+**Medium effort:**
+- Ingredient substitution flow — "I Don't Have These" button with swap suggestions
+- Gallery improvements — emoji reactions, delete your own entries
+- Cosmetic polish based on real-world usage
+
+**Bigger features:**
+- AI recipe generation via Claude API (generate challenges from category + constraints)
+- Auth via Supabase magic links — friend groups / private cooking circles
+- Gamification — streaks, voting, "most creative substitution" awards
