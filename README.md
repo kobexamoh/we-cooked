@@ -16,29 +16,39 @@ Each week there's one shared challenge — a simple, low-effort recipe. Cook it,
 ## Project Structure
 
 ```
-src/
-├── main.jsx              # Entry point
-├── App.jsx               # Router + layout
-├── index.css             # Tailwind + theme variables (lilac / charcoal)
-├── lib/
-│   └── supabase.js       # Supabase client
-├── hooks/
-│   └── useTheme.js       # Theme toggle (persisted to localStorage)
-├── data/
-│   └── challenges.js     # Hardcoded weekly challenge recipes
-├── components/
-│   ├── Header.jsx        # App header + theme toggle
-│   ├── ThemeToggle.jsx   # Lilac ↔ charcoal button
-│   ├── ChallengeCard.jsx # Challenge display (time, difficulty, etc.)
-│   ├── CookingStep.jsx   # Single step display
-│   ├── Timer.jsx         # Countdown timer for cooking steps
-│   ├── PhotoUpload.jsx   # Camera/file upload, strips EXIF metadata
-│   └── GalleryGrid.jsx   # Grid of submissions
-└── pages/
-    ├── Home.jsx          # Weekly challenge + ingredient list
-    ├── CookingFlow.jsx   # Step-by-step guided cooking
-    ├── Complete.jsx       # Photo upload + save to Supabase
-    └── Gallery.jsx        # Shared gallery (fetched from Supabase)
+we-cooked/
+├── index.html              # Entry HTML
+├── package.json            # Dependencies + scripts (dev, build, preview)
+├── vite.config.js          # Vite + React + Tailwind plugins
+├── vercel.json             # SPA rewrites (fixes 404 on refresh)
+├── .env                    # Supabase credentials (gitignored)
+├── .env.example            # Placeholder env template (committed)
+├── .gitignore
+├── public/
+│   └── favicon.svg         # 🍳 emoji favicon
+└── src/
+    ├── main.jsx            # React entry point
+    ├── App.jsx             # Router + layout (max-w-lg centered)
+    ├── index.css           # Tailwind + theme CSS variables
+    ├── lib/
+    │   └── supabase.js     # Supabase client singleton
+    ├── hooks/
+    │   └── useTheme.js     # Theme toggle (persisted to localStorage)
+    ├── data/
+    │   └── challenges.js   # Hardcoded weekly challenge recipes
+    ├── components/
+    │   ├── Header.jsx      # App header + theme toggle
+    │   ├── ThemeToggle.jsx # Lilac ↔ charcoal swap button
+    │   ├── ChallengeCard.jsx # Challenge display card
+    │   ├── CookingStep.jsx # Single instruction display
+    │   ├── Timer.jsx       # Countdown timer (start/pause/resume)
+    │   ├── PhotoUpload.jsx # Camera/file upload, strips EXIF
+    │   └── GalleryGrid.jsx # Submission grid + empty state
+    └── pages/
+        ├── Home.jsx        # Weekly challenge + ingredients + CTAs
+        ├── CookingFlow.jsx # Step-by-step with progress bar
+        ├── Complete.jsx    # Photo upload + save to Supabase
+        └── Gallery.jsx     # Shared gallery from Supabase
 ```
 
 ## Local Setup
@@ -91,13 +101,32 @@ create policy "Anyone can view" on storage.objects for select using (bucket_id =
 
 ## Deploy
 
+### First-time setup
+
 ```bash
-# Build
+# Link to Vercel (auto-detects Vite)
+npx vercel
+
+# Set environment variables on Vercel
+npx vercel env add VITE_SUPABASE_URL production
+npx vercel env add VITE_SUPABASE_ANON_KEY production
+```
+
+### Subsequent deploys
+
+```bash
+# Build locally (optional, to check for errors)
 npm run build
 
-# Deploy to Vercel
+# Deploy to production
 npx vercel --prod
 ```
+
+### Live URL
+
+https://we-cooked-lyart.vercel.app
+
+The `vercel.json` handles SPA rewrites so all routes (e.g. `/cook`, `/gallery`) work on direct access and refresh.
 
 ## Themes
 
