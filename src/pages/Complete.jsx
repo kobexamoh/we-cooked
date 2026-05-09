@@ -2,29 +2,48 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PhotoUpload from "../components/PhotoUpload";
 import { currentChallenge } from "../data/challenges";
-
-const GALLERY_KEY = "we-cooked-gallery";
+import { supabase } from "../lib/supabase";
 
 export default function Complete() {
   const [photo, setPhoto] = useState(null);
   const [caption, setCaption] = useState("");
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const navigate = useNavigate();
 
-  const save = () => {
-    const entry = {
-      id: Date.now().toString(),
-      challengeId: currentChallenge.id,
-      challengeTitle: currentChallenge.title,
-      photo,
-      caption,
-      date: new Date().toISOString(),
-    };
+  const save = async () => {
+    setSaving(true);
+    try {
+      let photoUrl = null;
 
-    const existing = JSON.parse(localStorage.getItem(GALLERY_KEY) || "[]");
-    existing.unshift(entry);
-    localStorage.setItem(GALLERY_KEY, JSON.stringify(existing));
-    setSaved(true);
+      // Upload photo to Supabase Storage if present
+      if (photo) {
+        const blob = await fetch(photo).then((r) => r.blob());
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+        const { error: uploadError } = await supabase.storage
+          .from("photos")
+          .upload(fileName, blob, { contentType: "image/jpeg" });
+
+        if (!uploadError) {
+          const { data } = supabase.storage.from("photos").getPublicUrl(fileName);
+          photoUrl = data.publicUrl;
+        }
+      }
+
+      // Insert submission row
+      await supabase.from("submissions").insert({
+        challenge_id: currentChallenge.id,
+        challenge_title: currentChallenge.title,
+        photo_url: photoUrl,
+        caption: caption || null,
+      });
+
+      setSaved(true);
+    } catch (err) {
+      console.error("Save failed:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (saved) {
@@ -75,11 +94,12 @@ export default function Complete() {
 
       <button
         onClick={save}
+        disabled={saving}
         className="mt-6 w-full max-w-md py-4 rounded-2xl bg-primary text-white
                    font-semibold text-lg transition-all hover:bg-primary-dark
-                   active:scale-[0.98] cursor-pointer"
+                   active:scale-[0.98] cursor-pointer disabled:opacity-60"
       >
-        Save to Gallery 📸
+        {saving ? "Saving..." : "Save to Gallery 📸"}
       </button>
 
       <button
